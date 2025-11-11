@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenManage Enterprise Web Console - Product Requirements Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0076ce;
+            --secondary-color: #00447c;
+            --accent-color: #00bceb;
+            --text-color: #333;
+            --bg-color: #f5f7fa;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header .subtitle {
+            margin-left: 1rem;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            display: flex;
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .sidebar h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #666;
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 0.6rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .toc-link:hover {
+            background: var(--bg-color);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .toc-link.active {
+            background: #e3f2fd;
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .toc-sub {
+            list-style: none;
+            margin-left: 1rem;
+        }
+
+        .toc-sub .toc-link {
+            font-size: 0.9rem;
+            padding: 0.4rem 1.5rem;
+        }
+
+        .content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 3rem;
+            max-width: 1200px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .toggle-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .section.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section.collapsed .section-content {
+            display: none;
+        }
+
+        .section-content {
+            margin-top: 1.5rem;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: var(--text-color);
+            margin: 1.5rem 0 0.75rem 0;
+            font-size: 1.1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .highlight-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: var(--bg-color);
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+
+        .badge-priority-high {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-priority-medium {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .badge-priority-low {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-phase {
+            background: #e3f2fd;
+            color: var(--primary-color);
+        }
+
+        .mermaid {
+            text-align: center;
+            margin: 2rem 0;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        @media print {
+            .sidebar, .header {
+                display: none;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .section {
+                break-inside: avoid;
+            }
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>OpenManage Enterprise Web Console</h1>
+        <span class="subtitle">Product Requirements Document v1.0</span>
+    </div>
+
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Table of Contents</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="#executive-summary" class="toc-link">1. Executive Summary</a></li>
+                <li class="toc-item"><a href="#market-analysis" class="toc-link">2. Market & User Analysis</a>
+                    <ul class="toc-sub">
+                        <li class="toc-item"><a href="#target-users" class="toc-link">2.1 Target Users</a></li>
+                        <li class="toc-item"><a href="#pain-points" class="toc-link">2.2 Pain Points</a></li>
+                        <li class="toc-item"><a href="#competitive" class="toc-link">2.3 Competitive Landscape</a></li>
+                    </ul>
+                </li>
+                <li class="toc-item"><a href="#product-strategy" class="toc-link">3. Product Strategy</a></li>
+                <li class="toc-item"><a href="#functional-requirements" class="toc-link">4. Functional Requirements</a>
+                    <ul class="toc-sub">
+                        <li class="toc-item"><a href="#dashboard" class="toc-link">4.1 Dashboard</a></li>
+                        <li class="toc-item"><a href="#deploy" class="toc-link">4.2 Deploy Operations</a></li>
+                        <li class="toc-item"><a href="#update" class="toc-link">4.3 Update Operations</a></li>
+                        <li class="toc-item"><a href="#monitor" class="toc-link">4.4 Monitor Operations</a></li>
+                        <li class="toc-item"><a href="#maintenance" class="toc-link">4.5 Maintenance</a></li>
+                        <li class="toc-item"><a href="#power-manager" class="toc-link">4.6 Power Manager</a></li>
+                    </ul>
+                </li>
+                <li class="toc-item"><a href="#enhancements" class="toc-link">5. Priority Enhancements</a></li>
+                <li class="toc-item"><a href="#non-functional" class="toc-link">6. Non-Functional Requirements</a></li>
+                <li class="toc-item"><a href="#architecture" class="toc-link">7. Technical Architecture</a></li>
+                <li class="toc-item"><a href="#user-experience" class="toc-link">8. User Experience</a></li>
+                <li class="toc-item"><a href="#success-metrics" class="toc-link">9. Success Metrics</a></li>
+                <li class="toc-item"><a href="#timeline" class="toc-link">10. Timeline & Milestones</a></li>
+                <li class="toc-item"><a href="#risks" class="toc-link">11. Risks & Mitigations</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="executive-summary" class="section">
+                <div class="section-header">
+                    <h2>1. Executive Summary</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="highlight-box">
+                        <h4>Vision Statement</h4>
+                        <p><strong>OpenManage Enterprise Web Console</strong> is a modern, enterprise-grade web management platform that provides a streamlined, customizable interface for managing Dell infrastructure through the OpenManage Enterprise API.</p>
+                    </div>
+
+                    <h3>Product Overview</h3>
+                    <p>This web-based management console will provide enterprise IT administrators with a powerful, intuitive interface to perform all Dell OpenManage Enterprise operations including device discovery, firmware management, monitoring, and power optimization - all from a customizable dashboard-driven experience.</p>
+
+                    <h3>Strategic Value Proposition</h3>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>🎯 Customizable Experience</h4>
+                            <p>Unlike the native OME console, provides drag-and-drop dashboard customization tailored to organizational workflows and device types.</p>
+                        </div>
+                        <div class="card">
+                            <h4>🚀 Modern Architecture</h4>
+                            <p>Built with modern enterprise stack (React, FastAPI, containerized) for performance, scalability, and easy deployment.</p>
+                        </div>
+                        <div class="card">
+                            <h4>🔧 Streamlined Operations</h4>
+                            <p>Focus on most-used operations with intelligent bulk actions, comparison views, and scheduled operations.</p>
+                        </div>
+                        <div class="card">
+                            <h4>📊 Enhanced Insights</h4>
+                            <p>Advanced reporting, trend analysis, and custom report builder beyond standard OME capabilities.</p>
+                        </div>
+                    </div>
+
+                    <h3>Success Criteria</h3>
+                    <ul>
+                        <li><strong>Pilot Completion:</strong> Fully functional MVP with all 6 operation categories in 3 months</li>
+                        <li><strong>User Adoption:</strong> 80% of pilot users prefer this console for daily operations</li>
+                        <li><strong>Performance:</strong> Sub-second response for dashboard loads, real-time job updates</li>
+                        <li><strong>Reliability:</strong> 99.9% uptime during pilot period</li>
+                        <li><strong>Customization:</strong> Users create average 3+ custom dashboards per role</li>
+                    </ul>
+
+                    <h3>Target Market</h3>
+                    <p><strong>Primary:</strong> Enterprise IT teams (500-10,000+ Dell servers) requiring streamlined Dell infrastructure management</p>
+                    <p><strong>Secondary:</strong> Managed service providers (MSPs) managing multiple client OME instances</p>
+                </div>
+            </section>
+
+            <section id="market-analysis" class="section">
+                <div class="section-header">
+                    <h2>2. Market & User Analysis</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3 id="target-users">2.1 Target Users</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Persona</th>
+                                <th>Role</th>
+                                <th>Primary Goals</th>
+                                <th>Pain Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>IT Administrator</strong></td>
+                                <td>Infrastructure Manager</td>
+                                <td>Manage device lifecycle, ensure compliance, monitor health</td>
+                                <td>Repetitive tasks, multiple tools, complex workflows</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Operations Engineer</strong></td>
+                                <td>Day-to-day Management</td>
+                                <td>Firmware updates, device discovery, troubleshooting</td>
+                                <td>Time-consuming bulk operations, unclear job status</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Power Manager</strong></td>
+                                <td>Energy Optimization</td>
+                                <td>Monitor consumption, apply policies, reduce costs</td>
+                                <td>Limited visibility into power trends, manual policy application</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Auditor/Viewer</strong></td>
+                                <td>Compliance & Reporting</td>
+                                <td>Generate reports, verify compliance, track changes</td>
+                                <td>Inflexible reports, no custom views, limited export options</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 id="pain-points">2.2 Current Pain Points</h3>
+
+                    <div class="grid-2">
+                        <div>
+                            <h4>Native OME Console Limitations</h4>
+                            <ul>
+                                <li>Fixed dashboard layouts - not customizable per user/role</li>
+                                <li>Complex navigation for common tasks</li>
+                                <li>Limited bulk operation capabilities</li>
+                                <li>No side-by-side comparison views</li>
+                                <li>Inflexible reporting options</li>
+                                <li>No scheduled operations (maintenance windows)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>CLI/Script Approach Limitations</h4>
+                            <ul>
+                                <li>Steep learning curve for non-developers</li>
+                                <li>No visual feedback or progress tracking</li>
+                                <li>Error-prone manual input</li>
+                                <li>Difficult to audit who did what</li>
+                                <li>No centralized history or rollback</li>
+                                <li>Requires maintenance of script library</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 id="competitive">2.3 Competitive Landscape</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Solution</th>
+                                <th>Strengths</th>
+                                <th>Weaknesses</th>
+                                <th>Our Advantage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Native OME Console</strong></td>
+                                <td>Official, comprehensive, integrated</td>
+                                <td>Not customizable, complex UI, enterprise bloat</td>
+                                <td>Streamlined, customizable, modern UX</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CLI Scripts</strong></td>
+                                <td>Powerful, automatable, flexible</td>
+                                <td>No UI, requires technical expertise</td>
+                                <td>Visual interface with CLI power</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Third-party Tools</strong></td>
+                                <td>Multi-vendor support</td>
+                                <td>Expensive, generic, not Dell-optimized</td>
+                                <td>Dell-specific, cost-effective, purpose-built</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="product-strategy" class="section">
+                <div class="section-header">
+                    <h2>3. Product Strategy</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>MVP Scope (3-Month Pilot)</h3>
+                    <div class="success-box">
+                        <h4>Core Capabilities</h4>
+                        <ul>
+                            <li>✅ Single OME instance connectivity with secure authentication</li>
+                            <li>✅ Customizable dashboard with drag-and-drop widgets</li>
+                            <li>✅ All 6 operation categories (47 operations total)</li>
+                            <li>✅ Real-time job tracking and notifications</li>
+                            <li>✅ Multi-user support with role-based access</li>
+                            <li>✅ Containerized deployment (Docker/Kubernetes)</li>
+                            <li>✅ Export capabilities (CSV, JSON, PDF reports)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Phased Feature Rollout</h3>
+                    <div class="mermaid">
+                        graph LR
+                            A[Phase 1<br/>Foundation] --> B[Phase 2<br/>Core Operations]
+                            B --> C[Phase 3<br/>Advanced Features]
+                            C --> D[Pilot Release]
+
+                            A1[Authentication<br/>Dashboard Framework<br/>Monitor Ops] --> A
+                            B1[Deploy Ops<br/>Update Ops<br/>Job Tracking] --> B
+                            C1[Power Manager<br/>Maintenance<br/>Enhancements] --> C
+                            D1[Testing<br/>Documentation<br/>Deployment] --> D
+
+                            style A fill:#e3f2fd
+                            style B fill:#e3f2fd
+                            style C fill:#e3f2fd
+                            style D fill:#c8e6c9
+                    </div>
+
+                    <h3>Out of Scope for MVP</h3>
+                    <ul>
+                        <li>Multi-OME instance aggregation (single instance focus)</li>
+                        <li>Mobile native apps (responsive web only)</li>
+                        <li>Offline mode</li>
+                        <li>Integration with non-Dell systems</li>
+                        <li>AI/ML predictive analytics</li>
+                        <li>Custom plugin development framework</li>
+                    </ul>
+
+                    <h3>Future Roadmap (Post-Pilot)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Quarter</th>
+                                <th>Features</th>
+                                <th>Business Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Q2 2025</strong></td>
+                                <td>Multi-OME instance support, SSO/LDAP, Advanced RBAC</td>
+                                <td>Enterprise scalability, security compliance</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q3 2025</strong></td>
+                                <td>Workflow automation builder, AI-powered recommendations</td>
+                                <td>Operational efficiency, proactive management</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q4 2025</strong></td>
+                                <td>Mobile apps, offline mode, plugin marketplace</td>
+                                <td>Mobility, extensibility, ecosystem growth</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="functional-requirements" class="section">
+                <div class="section-header">
+                    <h2>4. Functional Requirements</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <p>Comprehensive coverage of all 6 operation categories from the OpenManage Enterprise API, totaling 47 distinct operations.</p>
+
+                    <h3 id="dashboard">4.1 Customizable Dashboard Module</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+                    <span class="badge badge-phase">Phase 1</span>
+
+                    <h4>Overview</h4>
+                    <p>The central hub of the application, providing at-a-glance visibility into OME infrastructure health, status, and operations.</p>
+
+                    <h4>Widget Library</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Widget</th>
+                                <th>Description</th>
+                                <th>Data Source</th>
+                                <th>Customization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Device Health Summary</strong></td>
+                                <td>Total devices by status (healthy/warning/critical)</td>
+                                <td>GET /DeviceService/Devices</td>
+                                <td>Filter by device type, group</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Active Alerts</strong></td>
+                                <td>Recent alerts with severity breakdown</td>
+                                <td>GET /AlertService/Alerts</td>
+                                <td>Filter by severity, category, time range</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Job Queue Status</strong></td>
+                                <td>Running/pending/completed jobs</td>
+                                <td>GET /JobService/Jobs</td>
+                                <td>Show/hide job types</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Firmware Compliance</strong></td>
+                                <td>Baseline compliance gauge</td>
+                                <td>GET /UpdateService/Baselines</td>
+                                <td>Select specific baseline</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Power Consumption Trend</strong></td>
+                                <td>Real-time and historical power usage</td>
+                                <td>Power Manager APIs</td>
+                                <td>Time range, device/group selection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Top Device Groups</strong></td>
+                                <td>Most used groups with device counts</td>
+                                <td>GET /GroupService/Groups</td>
+                                <td>Sort by size/name/recent</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Warranty Status</strong></td>
+                                <td>Devices with expiring warranties</td>
+                                <td>GET /WarrantyService</td>
+                                <td>Warning threshold (30/60/90 days)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quick Actions</strong></td>
+                                <td>One-click access to common operations</td>
+                                <td>N/A</td>
+                                <td>User-defined action shortcuts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Dashboard Customization Features</h4>
+                    <ul>
+                        <li><strong>Drag-and-drop:</strong> Reposition widgets via React Grid Layout</li>
+                        <li><strong>Resize:</strong> Widgets support small/medium/large sizes</li>
+                        <li><strong>Add/Remove:</strong> Widget gallery to add from library</li>
+                        <li><strong>Save/Load:</strong> Multiple named dashboards per user</li>
+                        <li><strong>Share:</strong> Export dashboard config to share with team</li>
+                        <li><strong>Templates:</strong> Pre-built dashboards (Server Admin, Power Manager, Security Auditor)</li>
+                        <li><strong>Tabs:</strong> Multiple dashboard tabs (e.g., Overview, Servers, Storage, Power)</li>
+                        <li><strong>Auto-refresh:</strong> Configurable refresh intervals (10s/30s/1m/5m/off)</li>
+                    </ul>
+
+                    <h3 id="deploy">4.2 Deploy Operations (13 Operations)</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+                    <span class="badge badge-phase">Phase 2</span>
+
+                    <h4>4.2.1 Device Discovery</h4>
+                    <p><strong>Operations:</strong> invoke_discover_device, edit_discovery_job</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Step-by-step discovery wizard with validation</li>
+                        <li>Support for multiple discovery protocols (SNMP, WS-Man, Redfish, SSH)</li>
+                        <li>Bulk IP range/subnet entry with CIDR notation</li>
+                        <li>CSV import for large device lists</li>
+                        <li>Credential management (save/reuse discovery credentials)</li>
+                        <li>Schedule recurring discovery jobs</li>
+                        <li>Real-time progress tracking with device-by-device status</li>
+                        <li>Failed device retry with detailed error messages</li>
+                    </ul>
+
+                    <h4>4.2.2 Group Management</h4>
+                    <p><strong>Operations:</strong> new_static_group, new_mcm_group, add_device_to_static_group, add_members_to_mcm_group, invoke_manage_query_groups</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Tree view of group hierarchy with drag-and-drop organization</li>
+                        <li>Static group creation with multi-select device assignment</li>
+                        <li>Dynamic/query groups with visual query builder</li>
+                        <li>MCM (Multi-Chassis Management) group setup wizard</li>
+                        <li>Bulk device import from CSV or discovery jobs</li>
+                        <li>Nested group support with inheritance visualization</li>
+                        <li>Group comparison view (side-by-side device lists)</li>
+                        <li>Group templates for common organizational patterns</li>
+                    </ul>
+
+                    <h4>4.2.3 Template Management</h4>
+                    <p><strong>Operations:</strong> new_template, deploy_template</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Template creation wizard with reference device selection</li>
+                        <li>Component-level template capture (iDRAC, BIOS, NIC, Lifecycle Controller)</li>
+                        <li>Template library with search, filter, tags</li>
+                        <li>Template comparison tool (diff view between templates)</li>
+                        <li>Deployment preview with impact analysis</li>
+                        <li>Identity pool integration for NIC/iDRAC settings</li>
+                        <li>Staged deployment with rollback capability</li>
+                        <li>Schedule deployments for maintenance windows</li>
+                        <li>Deployment history and audit log per template</li>
+                    </ul>
+
+                    <h4>4.2.4 Network Configuration</h4>
+                    <p><strong>Operations:</strong> new_network, copy_vlans, get_ome_vlans</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Network topology visualization</li>
+                        <li>VLAN creation with validation</li>
+                        <li>Bulk VLAN copy between OME instances</li>
+                        <li>VLAN assignment to device groups</li>
+                        <li>Network profile templates</li>
+                        <li>Conflict detection (overlapping VLANs)</li>
+                    </ul>
+
+                    <h4>4.2.5 User Management</h4>
+                    <p><strong>Operations:</strong> new_ome_user, get_ome_users</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>User creation with role assignment</li>
+                        <li>User list with active session tracking</li>
+                        <li>Password policy enforcement</li>
+                        <li>User activity audit log</li>
+                    </ul>
+
+                    <h4>4.2.6 Power State Control</h4>
+                    <p><strong>Operations:</strong> set_power_state</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Bulk power operations (on/off/cycle/graceful shutdown)</li>
+                        <li>Device power state visualization in grid</li>
+                        <li>Schedule power operations</li>
+                        <li>Safety confirmations with impact preview</li>
+                    </ul>
+
+                    <h3 id="update">4.3 Update Operations (3 Operations)</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+                    <span class="badge badge-phase">Phase 2</span>
+
+                    <h4>4.3.1 Firmware Management</h4>
+                    <p><strong>Operations:</strong> update_firmware_using_catalog, update_installed_firmware_with_dup, get_firmware_baselines</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Firmware baseline dashboard with compliance visualization</li>
+                        <li>Catalog browser with Dell repository sync status</li>
+                        <li>Component-level update selection (BIOS, iDRAC, NIC, RAID, etc.)</li>
+                        <li>Direct DUP file upload for offline updates</li>
+                        <li>Update impact analysis (reboot required, dependencies, conflicts)</li>
+                        <li>Staged rollout (pilot group → production)</li>
+                        <li>Schedule updates for maintenance windows</li>
+                        <li>Update history per device with rollback tracking</li>
+                        <li>Compliance reporting (baseline vs. current versions)</li>
+                        <li>Bulk update operations with progress tracking</li>
+                        <li>Automatic retry on failures with configurable attempts</li>
+                    </ul>
+
+                    <h4>4.3.2 Inventory Refresh</h4>
+                    <p><strong>Operations:</strong> invoke_refresh_inventory</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Manual inventory refresh for selected devices/groups</li>
+                        <li>Schedule recurring inventory refresh jobs</li>
+                        <li>Last refresh timestamp display in device list</li>
+                        <li>Change tracking (highlight inventory differences)</li>
+                    </ul>
+
+                    <h3 id="monitor">4.4 Monitor Operations (12 Operations)</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+                    <span class="badge badge-phase">Phase 1</span>
+
+                    <h4>4.4.1 Device Inventory</h4>
+                    <p><strong>Operations:</strong> get_device_list, get_device_inventory, get_chassis_inventory</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Responsive data grid with sorting, filtering, pagination</li>
+                        <li>Multi-level filtering (device type, status, group, model, location)</li>
+                        <li>Saved filter presets</li>
+                        <li>Column customization (show/hide, reorder)</li>
+                        <li>Device detail drill-down (hardware specs, firmware versions, alerts)</li>
+                        <li>Chassis view with slot visualization for blades</li>
+                        <li>Export to CSV/JSON/Excel</li>
+                        <li>Bulk selection for operations</li>
+                        <li>Global search with autocomplete</li>
+                        <li>Device comparison view (side-by-side specs)</li>
+                    </ul>
+
+                    <h4>4.4.2 Alert Management</h4>
+                    <p><strong>Operations:</strong> get_alerts</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Alert dashboard with severity breakdown (critical/warning/info)</li>
+                        <li>Real-time alert stream with notifications</li>
+                        <li>Advanced filtering (severity, category, device, time range, status)</li>
+                        <li>Alert detail view with recommended actions</li>
+                        <li>Alert acknowledgment and comments</li>
+                        <li>Alert history and trends</li>
+                        <li>Custom alert rules and thresholds</li>
+                        <li>Email/webhook notifications on critical alerts</li>
+                        <li>Alert suppression during maintenance</li>
+                    </ul>
+
+                    <h4>4.4.3 Reporting</h4>
+                    <p><strong>Operations:</strong> get_report_list, invoke_report_execution, get_audit_logs</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Report library with pre-built and custom reports</li>
+                        <li>Report execution with parameter input</li>
+                        <li>Schedule recurring reports (daily/weekly/monthly)</li>
+                        <li>Report output formats (CSV, JSON, PDF, Excel)</li>
+                        <li>Report email distribution lists</li>
+                        <li>Audit log viewer with filtering</li>
+                        <li>Custom report builder with drag-and-drop fields</li>
+                        <li>Report templates sharing across team</li>
+                    </ul>
+
+                    <h4>4.4.4 Additional Monitoring</h4>
+                    <p><strong>Operations:</strong> get_group_by_device, get_group_details, get_group_details_by_filter, get_group_list, get_identitypool_usage, get_warranty_information</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Group membership visualization</li>
+                        <li>Identity pool usage tracking with threshold alerts</li>
+                        <li>Warranty expiration dashboard with notifications</li>
+                        <li>Service tag lookup and warranty auto-refresh</li>
+                    </ul>
+
+                    <h3 id="maintenance">4.5 Maintenance Operations (2 Operations)</h3>
+                    <span class="badge badge-priority-medium">Priority: MEDIUM</span>
+                    <span class="badge badge-phase">Phase 3</span>
+
+                    <h4>Operations</h4>
+                    <p><strong>Operations:</strong> invoke_retire_lead, set_scale_vlan_profile</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>MCM lead retirement wizard with backup lead selection</li>
+                        <li>Failover simulation and impact analysis</li>
+                        <li>Scale VLAN profile management interface</li>
+                        <li>Maintenance mode toggle for devices/groups</li>
+                    </ul>
+
+                    <h3 id="power-manager">4.6 Power Manager Module (15 Operations)</h3>
+                    <span class="badge badge-priority-medium">Priority: MEDIUM</span>
+                    <span class="badge badge-phase">Phase 3</span>
+
+                    <h4>Overview</h4>
+                    <p>Comprehensive power monitoring, optimization, and policy management for energy-efficient operations.</p>
+
+                    <h4>4.6.1 Power Monitoring</h4>
+                    <p><strong>Operations:</strong> get_power_manager_device_metrics, get_power_manager_group_metrics, get_power_manager_monitoring_list, get_power_manager_top_energy_consumers, get_power_manager_top_offenders</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Real-time power consumption dashboard</li>
+                        <li>Historical power trends (hourly/daily/weekly/monthly)</li>
+                        <li>Device-level and group-level metrics</li>
+                        <li>Top energy consumers ranking (devices/chassis/groups)</li>
+                        <li>Power/temperature threshold violations tracking</li>
+                        <li>Power efficiency scoring</li>
+                        <li>Cost estimation based on kWh rates</li>
+                        <li>Comparative analysis (before/after policy application)</li>
+                    </ul>
+
+                    <h4>4.6.2 Policy Management</h4>
+                    <p><strong>Operations:</strong> get_power_manager_policies, get_set_power_manager_setting</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Power policy library with templates</li>
+                        <li>Policy creation wizard (static/dynamic caps, thermal management)</li>
+                        <li>Bulk policy application to groups</li>
+                        <li>Policy effectiveness tracking</li>
+                        <li>Schedule policy changes (business hours vs. off-hours)</li>
+                        <li>Power Manager global settings configuration</li>
+                    </ul>
+
+                    <h4>4.6.3 Capability & Alerts</h4>
+                    <p><strong>Operations:</strong> find_non_pmp_capable_devices, find_non_power_policy_capable_devices, get_power_manager_capable_devices, get_power_manager_alerts</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Device capability matrix (PMP support, policy support)</li>
+                        <li>Capability gap analysis for fleet upgrades</li>
+                        <li>Power-specific alert stream</li>
+                        <li>Alert correlation with policy violations</li>
+                    </ul>
+
+                    <h4>4.6.4 Reporting & Physical Groups</h4>
+                    <p><strong>Operations:</strong> get_power_manager_epr, get_power_manager_reports, invoke_refresh_power_manager_inventory, new_power_manager_physical_group</p>
+
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>EPR (Emergency Power Reduction) configuration and testing</li>
+                        <li>Power Manager specific reports</li>
+                        <li>Physical group creation (rack/row/data center organization)</li>
+                        <li>Power inventory refresh for latest metrics</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <strong>Note:</strong> Power Manager features require Power Manager plugin v1.2+ installed on OME.
+                    </div>
+                </div>
+            </section>
+
+            <section id="enhancements" class="section">
+                <div class="section-header">
+                    <h2>5. Priority Enhancements</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <p>Advanced features that differentiate this console from native OME and provide significant operational value.</p>
+
+                    <h3>5.1 Comparison View Engine</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Device Comparison:</strong> Side-by-side hardware specs, firmware versions, configurations</li>
+                        <li><strong>Template Comparison:</strong> Diff view showing configuration differences between templates</li>
+                        <li><strong>Baseline Comparison:</strong> Compare firmware baselines for upgrade planning</li>
+                        <li><strong>Group Comparison:</strong> Device membership, policies, compliance status</li>
+                        <li><strong>Visual Diff:</strong> Color-coded highlighting of differences</li>
+                        <li><strong>Export:</strong> Comparison reports in PDF/Excel</li>
+                    </ul>
+
+                    <h3>5.2 Bulk Operations Framework</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Multi-select UI:</strong> Checkbox selection with select all/none/filtered</li>
+                        <li><strong>Preview Mode:</strong> Show impact before applying (devices affected, settings changed)</li>
+                        <li><strong>Validation:</strong> Pre-flight checks for compatibility/conflicts</li>
+                        <li><strong>Staged Execution:</strong> Pilot group → review → full rollout</li>
+                        <li><strong>Progress Tracking:</strong> Real-time status per device with success/failure breakdown</li>
+                        <li><strong>Automatic Retry:</strong> Configurable retry logic for transient failures</li>
+                        <li><strong>Rollback Support:</strong> Undo operations where possible</li>
+                        <li><strong>CSV Import:</strong> Bulk operations from spreadsheet</li>
+                    </ul>
+
+                    <h4>Supported Bulk Operations:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Description</th>
+                                <th>Impact Analysis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Firmware Update</td>
+                                <td>Update multiple devices to baseline</td>
+                                <td>Reboot required, estimated downtime, dependencies</td>
+                            </tr>
+                            <tr>
+                                <td>Group Assignment</td>
+                                <td>Add/remove devices to/from groups</td>
+                                <td>Policy inheritance changes</td>
+                            </tr>
+                            <tr>
+                                <td>Template Deployment</td>
+                                <td>Apply template to multiple devices</td>
+                                <td>Configuration changes, reboot requirements</td>
+                            </tr>
+                            <tr>
+                                <td>Power Policy</td>
+                                <td>Apply power policy to device group</td>
+                                <td>Power cap changes, thermal impact</td>
+                            </tr>
+                            <tr>
+                                <td>Inventory Refresh</td>
+                                <td>Refresh inventory for selected devices</td>
+                                <td>Device load, network impact</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>5.3 Scheduled Operations</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Maintenance Windows:</strong> Define recurring maintenance schedules</li>
+                        <li><strong>Operation Scheduler:</strong> Schedule any operation for future execution</li>
+                        <li><strong>Cron Expression Support:</strong> Flexible scheduling (daily at 2 AM, first Sunday of month, etc.)</li>
+                        <li><strong>Approval Workflow:</strong> Require manager approval for critical operations</li>
+                        <li><strong>Notifications:</strong> Email/webhook alerts before/after scheduled operations</li>
+                        <li><strong>Schedule Calendar View:</strong> Visual calendar of all scheduled operations</li>
+                        <li><strong>Conflict Detection:</strong> Prevent overlapping operations on same devices</li>
+                        <li><strong>Pre-execution Checks:</strong> Validate conditions before execution (device online, no alerts)</li>
+                    </ul>
+
+                    <h3>5.4 Custom Report Builder</h3>
+                    <span class="badge badge-priority-medium">Priority: MEDIUM</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Drag-and-drop Interface:</strong> Select data sources, fields, groupings</li>
+                        <li><strong>Visual Query Builder:</strong> No-code filtering and aggregation</li>
+                        <li><strong>Multi-source Reports:</strong> Combine device, alert, job, power data</li>
+                        <li><strong>Calculated Fields:</strong> Custom formulas (e.g., power cost = kWh × rate)</li>
+                        <li><strong>Visualizations:</strong> Charts, gauges, heatmaps embedded in reports</li>
+                        <li><strong>Parameterized Reports:</strong> User inputs at runtime (date range, device group)</li>
+                        <li><strong>Report Scheduling:</strong> Auto-generate and distribute reports</li>
+                        <li><strong>Template Library:</strong> Save and share report templates</li>
+                        <li><strong>Export Formats:</strong> PDF, Excel, CSV, JSON</li>
+                    </ul>
+
+                    <h3>5.5 Webhook & Integration Framework</h3>
+                    <span class="badge badge-priority-medium">Priority: MEDIUM</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Webhook Configuration:</strong> Register URLs for event notifications</li>
+                        <li><strong>Event Types:</strong> Alert raised, job completed, device discovered, firmware updated, etc.</li>
+                        <li><strong>Filtering:</strong> Only trigger webhooks for specific conditions (critical alerts, failed jobs)</li>
+                        <li><strong>Payload Customization:</strong> Template webhook payload format</li>
+                        <li><strong>Retry Logic:</strong> Automatic retry on webhook delivery failure</li>
+                        <li><strong>Pre-built Integrations:</strong></li>
+                        <ul>
+                            <li>Slack notifications</li>
+                            <li>Microsoft Teams messages</li>
+                            <li>Email via SMTP</li>
+                            <li>PagerDuty incidents</li>
+                            <li>ServiceNow tickets</li>
+                        </ul>
+                        <li><strong>Webhook Testing:</strong> Test webhooks with sample payloads</li>
+                        <li><strong>Delivery Logs:</strong> Track webhook delivery status and errors</li>
+                    </ul>
+
+                    <h3>5.6 API-First Design</h3>
+                    <span class="badge badge-priority-high">Priority: HIGH</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Full REST API:</strong> Every UI operation available via API</li>
+                        <li><strong>OpenAPI/Swagger Docs:</strong> Auto-generated API documentation</li>
+                        <li><strong>API Key Management:</strong> Generate/revoke API keys for automation</li>
+                        <li><strong>Rate Limiting:</strong> Protect backend from abuse</li>
+                        <li><strong>Versioning:</strong> API version support (v1, v2) for backward compatibility</li>
+                        <li><strong>SDKs:</strong> Python and PowerShell SDK libraries</li>
+                        <li><strong>Interactive API Explorer:</strong> Test API calls from browser</li>
+                    </ul>
+
+                    <h3>5.7 Advanced Search & Filtering</h3>
+                    <span class="badge badge-priority-medium">Priority: MEDIUM</span>
+
+                    <h4>Features:</h4>
+                    <ul>
+                        <li><strong>Global Search:</strong> Search across devices, groups, templates, alerts, jobs</li>
+                        <li><strong>Autocomplete:</strong> Smart suggestions as you type</li>
+                        <li><strong>Saved Searches:</strong> Save complex filter combinations</li>
+                        <li><strong>Advanced Query Language:</strong> Text-based query syntax for power users</li>
+                        <li><strong>Search History:</strong> Quick access to recent searches</li>
+                        <li><strong>Search Results Ranking:</strong> Most relevant results first</li>
+                        <li><strong>Faceted Search:</strong> Drill down by categories (device type, status, location)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="non-functional" class="section">
+                <div class="section-header">
+                    <h2>6. Non-Functional Requirements</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>6.1 Performance</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Target</th>
+                                <th>Measurement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dashboard Load Time</td>
+                                <td>&lt; 1 second</td>
+                                <td>Time to interactive after login</td>
+                            </tr>
+                            <tr>
+                                <td>Device List Load (1000 devices)</td>
+                                <td>&lt; 2 seconds</td>
+                                <td>Initial page load with pagination</td>
+                            </tr>
+                            <tr>
+                                <td>Search Results</td>
+                                <td>&lt; 500ms</td>
+                                <td>Return autocomplete suggestions</td>
+                            </tr>
+                            <tr>
+                                <td>API Response Time (p95)</td>
+                                <td>&lt; 200ms</td>
+                                <td>Backend API excluding OME calls</td>
+                            </tr>
+                            <tr>
+                                <td>Job Status Updates</td>
+                                <td>Every 5 seconds</td>
+                                <td>Real-time polling frequency</td>
+                            </tr>
+                            <tr>
+                                <td>Concurrent Users</td>
+                                <td>100+ simultaneous</td>
+                                <td>No degradation in performance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>6.2 Security</h3>
+
+                    <h4>Authentication & Authorization</h4>
+                    <ul>
+                        <li><strong>Authentication:</strong> Username/password with bcrypt hashing (10 rounds minimum)</li>
+                        <li><strong>Session Management:</strong> JWT tokens with 8-hour expiration, refresh token support</li>
+                        <li><strong>Password Policy:</strong> Minimum 12 characters, complexity requirements, rotation every 90 days</li>
+                        <li><strong>Role-Based Access Control (RBAC):</strong></li>
+                        <ul>
+                            <li><strong>Viewer:</strong> Read-only access to all modules</li>
+                            <li><strong>Operator:</strong> Execute operations, cannot modify users/policies</li>
+                            <li><strong>Administrator:</strong> Full access including user management</li>
+                        </ul>
+                        <li><strong>API Key Authentication:</strong> Alternative to username/password for automation</li>
+                        <li><strong>Session Timeout:</strong> 30 minutes inactivity, 8 hours absolute</li>
+                        <li><strong>Multi-Factor Authentication (MFA):</strong> TOTP-based (Google Authenticator, Authy) - Post-MVP</li>
+                    </ul>
+
+                    <h4>Data Protection</h4>
+                    <ul>
+                        <li><strong>Encryption in Transit:</strong> TLS 1.2+ only, strong cipher suites</li>
+                        <li><strong>Encryption at Rest:</strong> OME credentials encrypted with AES-256</li>
+                        <li><strong>Secret Management:</strong> OME passwords never logged, masked in UI</li>
+                        <li><strong>Input Validation:</strong> All user inputs sanitized to prevent injection attacks</li>
+                        <li><strong>CORS Policy:</strong> Strict origin checking</li>
+                        <li><strong>XSS Protection:</strong> Content Security Policy headers</li>
+                        <li><strong>SQL Injection:</strong> Parameterized queries via SQLAlchemy ORM</li>
+                    </ul>
+
+                    <h4>Audit & Compliance</h4>
+                    <ul>
+                        <li><strong>Audit Logging:</strong> All operations logged (who, what, when, result)</li>
+                        <li><strong>Audit Retention:</strong> 1 year minimum, configurable</li>
+                        <li><strong>Tamper-proof Logs:</strong> Append-only logging to prevent modification</li>
+                        <li><strong>Compliance Reports:</strong> Generate audit trails for compliance requirements</li>
+                        <li><strong>Change Tracking:</strong> All configuration changes tracked with diff</li>
+                    </ul>
+
+                    <h3>6.3 Reliability</h3>
+                    <ul>
+                        <li><strong>Uptime SLA:</strong> 99.9% availability during pilot (8.76 hours downtime/year)</li>
+                        <li><strong>Error Handling:</strong> Graceful degradation on OME API failures</li>
+                        <li><strong>Retry Logic:</strong> Automatic retry with exponential backoff for transient errors</li>
+                        <li><strong>Circuit Breaker:</strong> Prevent cascade failures from OME downtime</li>
+                        <li><strong>Health Checks:</strong> /health and /ready endpoints for monitoring</li>
+                        <li><strong>Connection Pooling:</strong> Reuse OME API connections efficiently</li>
+                        <li><strong>Timeout Management:</strong> Reasonable timeouts to prevent hanging requests</li>
+                        <li><strong>Job Recovery:</strong> Resume interrupted jobs after restart</li>
+                    </ul>
+
+                    <h3>6.4 Scalability</h3>
+                    <ul>
+                        <li><strong>Horizontal Scaling:</strong> Stateless backend supports multiple instances</li>
+                        <li><strong>Database Connection Pooling:</strong> Efficient PostgreSQL connection reuse</li>
+                        <li><strong>Redis Caching:</strong> Cache frequent OME API calls (device list, groups)</li>
+                        <li><strong>Pagination:</strong> All large datasets paginated (100 items per page default)</li>
+                        <li><strong>Async Processing:</strong> Long-running operations via Celery queues</li>
+                        <li><strong>CDN-Ready:</strong> Static assets optimized for CDN delivery</li>
+                        <li><strong>Database Indexing:</strong> Proper indexes on frequently queried columns</li>
+                    </ul>
+
+                    <h3>6.5 Maintainability</h3>
+                    <ul>
+                        <li><strong>Code Quality:</strong> 80%+ test coverage, linting enforced</li>
+                        <li><strong>Logging:</strong> Structured JSON logs with correlation IDs</li>
+                        <li><strong>Monitoring:</strong> Prometheus metrics for all key operations</li>
+                        <li><strong>Documentation:</strong> API docs (OpenAPI), deployment guide, user manual</li>
+                        <li><strong>Versioning:</strong> Semantic versioning (MAJOR.MINOR.PATCH)</li>
+                        <li><strong>Dependency Management:</strong> Lock files for reproducible builds</li>
+                        <li><strong>Database Migrations:</strong> Alembic for schema version control</li>
+                        <li><strong>Configuration Management:</strong> Environment-based config (dev/staging/prod)</li>
+                    </ul>
+
+                    <h3>6.6 Usability</h3>
+                    <ul>
+                        <li><strong>Responsive Design:</strong> Support desktop (1920x1080+), tablet (1024x768+), mobile (375x667+)</li>
+                        <li><strong>Browser Support:</strong> Latest 2 versions of Chrome, Firefox, Safari, Edge</li>
+                        <li><strong>Accessibility:</strong> WCAG 2.1 AA compliance target</li>
+                        <li><strong>Loading States:</strong> Skeleton screens, progress indicators for all async operations</li>
+                        <li><strong>Error Messages:</strong> User-friendly error messages with suggested actions</li>
+                        <li><strong>Help System:</strong> Contextual help tooltips, inline documentation</li>
+                        <li><strong>Keyboard Navigation:</strong> Full keyboard support for power users</li>
+                        <li><strong>Dark Mode:</strong> Optional dark theme for reduced eye strain</li>
+                    </ul>
+
+                    <h3>6.7 Deployment</h3>
+                    <ul>
+                        <li><strong>Container Packaging:</strong> Docker images for frontend, backend, workers</li>
+                        <li><strong>Orchestration:</strong> Kubernetes manifests (Deployment, Service, Ingress, ConfigMap)</li>
+                        <li><strong>Configuration:</strong> Environment variables, ConfigMaps, Secrets</li>
+                        <li><strong>Persistence:</strong> PostgreSQL StatefulSet, Redis for cache</li>
+                        <li><strong>Backup:</strong> Automated daily database backups with 30-day retention</li>
+                        <li><strong>Monitoring Stack:</strong> Prometheus + Grafana dashboards</li>
+                        <li><strong>Log Aggregation:</strong> ELK stack compatible (Elasticsearch, Logstash, Kibana)</li>
+                        <li><strong>CI/CD Pipeline:</strong> Automated testing, building, and deployment</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="architecture" class="section">
+                <div class="section-header">
+                    <h2>7. Technical Architecture</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>7.1 System Architecture Overview</h3>
+                    <div class="mermaid">
+                        graph TB
+                            subgraph "Client Layer"
+                                Browser[Web Browser]
+                            end
+
+                            subgraph "Load Balancer / Ingress"
+                                LB[Nginx / Kubernetes Ingress]
+                            end
+
+                            subgraph "Application Layer"
+                                FE[React Frontend<br/>TypeScript, Ant Design]
+                                API[FastAPI Backend<br/>Python 3.11+]
+                                Worker[Celery Workers<br/>Async Task Processing]
+                            end
+
+                            subgraph "Data Layer"
+                                DB[(PostgreSQL<br/>User Data, Config, Audit)]
+                                Cache[(Redis<br/>Session, Cache, Queue)]
+                            end
+
+                            subgraph "External Systems"
+                                OME[Dell OpenManage Enterprise<br/>REST API]
+                            end
+
+                            Browser --> LB
+                            LB --> FE
+                            LB --> API
+                            FE --> API
+                            API --> DB
+                            API --> Cache
+                            API --> Worker
+                            Worker --> Cache
+                            Worker --> OME
+                            API --> OME
+
+                            style FE fill:#e3f2fd
+                            style API fill:#e3f2fd
+                            style Worker fill:#e3f2fd
+                            style DB fill:#c8e6c9
+                            style Cache fill:#c8e6c9
+                            style OME fill:#fff3e0
+                    </div>
+
+                    <h3>7.2 Technology Stack</h3>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Frontend</h4>
+                            <table>
+                                <tr><td><strong>Framework</strong></td><td>React 18</td></tr>
+                                <tr><td><strong>Language</strong></td><td>TypeScript 5.x</td></tr>
+                                <tr><td><strong>UI Library</strong></td><td>Ant Design 5.x</td></tr>
+                                <tr><td><strong>State Management</strong></td><td>Redux Toolkit</td></tr>
+                                <tr><td><strong>API Client</strong></td><td>React Query (TanStack Query)</td></tr>
+                                <tr><td><strong>Routing</strong></td><td>React Router v6</td></tr>
+                                <tr><td><strong>Charts</strong></td><td>Recharts / Chart.js</td></tr>
+                                <tr><td><strong>Dashboard Layout</strong></td><td>React Grid Layout</td></tr>
+                                <tr><td><strong>Build Tool</strong></td><td>Vite</td></tr>
+                                <tr><td><strong>Testing</strong></td><td>Vitest, React Testing Library</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="card">
+                            <h4>Backend</h4>
+                            <table>
+                                <tr><td><strong>Framework</strong></td><td>FastAPI 0.100+</td></tr>
+                                <tr><td><strong>Language</strong></td><td>Python 3.11+</td></tr>
+                                <tr><td><strong>ORM</strong></td><td>SQLAlchemy 2.x</td></tr>
+                                <tr><td><strong>Migration</strong></td><td>Alembic</td></tr>
+                                <tr><td><strong>Validation</strong></td><td>Pydantic v2</td></tr>
+                                <tr><td><strong>Task Queue</strong></td><td>Celery 5.x</td></tr>
+                                <tr><td><strong>HTTP Client</strong></td><td>httpx (async)</td></tr>
+                                <tr><td><strong>Auth</strong></td><td>python-jose (JWT)</td></tr>
+                                <tr><td><strong>Testing</strong></td><td>pytest, pytest-asyncio</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Data & Cache</h4>
+                            <table>
+                                <tr><td><strong>Database</strong></td><td>PostgreSQL 15+</td></tr>
+                                <tr><td><strong>Cache/Queue</strong></td><td>Redis 7.x</td></tr>
+                                <tr><td><strong>Message Broker</strong></td><td>Redis (Celery broker)</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="card">
+                            <h4>Infrastructure</h4>
+                            <table>
+                                <tr><td><strong>Containers</strong></td><td>Docker</td></tr>
+                                <tr><td><strong>Orchestration</strong></td><td>Kubernetes</td></tr>
+                                <tr><td><strong>Reverse Proxy</strong></td><td>Nginx</td></tr>
+                                <tr><td><strong>Monitoring</strong></td><td>Prometheus + Grafana</td></tr>
+                                <tr><td><strong>Logging</strong></td><td>ELK Stack compatible</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <h3>7.3 API Architecture</h3>
+                    <div class="mermaid">
+                        sequenceDiagram
+                            participant U as User/Browser
+                            participant F as Frontend
+                            participant A as FastAPI Backend
+                            participant C as Redis Cache
+                            participant W as Celery Worker
+                            participant O as OME API
+                            participant D as PostgreSQL
+
+                            U->>F: Request Dashboard
+                            F->>A: GET /api/v1/dashboard
+                            A->>C: Check Cache
+                            alt Cache Hit
+                                C-->>A: Cached Data
+                            else Cache Miss
+                                A->>O: GET /api/DeviceService/Devices
+                                O-->>A: Device List
+                                A->>C: Store in Cache (5min TTL)
+                            end
+                            A->>D: Get User Preferences
+                            D-->>A: Dashboard Config
+                            A-->>F: Dashboard Data
+                            F-->>U: Render Dashboard
+
+                            U->>F: Trigger Firmware Update
+                            F->>A: POST /api/v1/firmware/update
+                            A->>D: Log Audit Entry
+                            A->>W: Queue Update Job
+                            A-->>F: Job ID + Accepted (202)
+                            F-->>U: Show Progress Tracker
+
+                            loop Job Polling
+                                F->>A: GET /api/v1/jobs/{id}
+                                A->>C: Get Job Status
+                                C-->>A: Job Status
+                                A-->>F: Status Update
+                                F-->>U: Update Progress
+                            end
+
+                            W->>O: POST /api/UpdateService/Actions/...
+                            O-->>W: OME Job Created
+                            W->>C: Update Job Status
+                            W->>D: Log Job Result
+                    </div>
+
+                    <h3>7.4 Data Model</h3>
+                    <div class="mermaid">
+                        erDiagram
+                            USER ||--o{ DASHBOARD : creates
+                            USER ||--o{ API_KEY : owns
+                            USER ||--o{ AUDIT_LOG : performs
+                            USER }o--|| ROLE : has
+
+                            DASHBOARD ||--o{ WIDGET : contains
+
+                            OME_CONNECTION ||--o{ AUDIT_LOG : tracks
+                            OME_CONNECTION ||--o{ JOB : manages
+
+                            JOB ||--o{ JOB_STEP : contains
+
+                            USER {
+                                uuid id PK
+                                string username UK
+                                string password_hash
+                                uuid role_id FK
+                                timestamp created_at
+                                timestamp last_login
+                                boolean is_active
+                            }
+
+                            ROLE {
+                                uuid id PK
+                                string name
+                                json permissions
+                            }
+
+                            DASHBOARD {
+                                uuid id PK
+                                uuid user_id FK
+                                string name
+                                json layout
+                                boolean is_default
+                                timestamp updated_at
+                            }
+
+                            WIDGET {
+                                uuid id PK
+                                uuid dashboard_id FK
+                                string widget_type
+                                json config
+                                json position
+                            }
+
+                            OME_CONNECTION {
+                                uuid id PK
+                                string name
+                                string ip_address
+                                string credentials_encrypted
+                                boolean is_active
+                                timestamp last_connected
+                            }
+
+                            JOB {
+                                uuid id PK
+                                uuid ome_connection_id FK
+                                string job_type
+                                string status
+                                json parameters
+                                string ome_job_id
+                                timestamp started_at
+                                timestamp completed_at
+                            }
+
+                            JOB_STEP {
+                                uuid id PK
+                                uuid job_id FK
+                                integer step_number
+                                string description
+                                string status
+                                json result
+                            }
+
+                            AUDIT_LOG {
+                                uuid id PK
+                                uuid user_id FK
+                                uuid ome_connection_id FK
+                                string action
+                                json details
+                                string ip_address
+                                timestamp timestamp
+                            }
+
+                            API_KEY {
+                                uuid id PK
+                                uuid user_id FK
+                                string key_hash
+                                string name
+                                timestamp expires_at
+                                timestamp last_used
+                            }
+                    </div>
+
+                    <h3>7.5 Deployment Architecture</h3>
+                    <div class="mermaid">
+                        graph TB
+                            subgraph "Kubernetes Cluster"
+                                subgraph "Ingress"
+                                    ING[Nginx Ingress Controller<br/>TLS Termination]
+                                end
+
+                                subgraph "Application Pods"
+                                    FE1[Frontend Pod 1]
+                                    FE2[Frontend Pod 2]
+                                    API1[Backend Pod 1]
+                                    API2[Backend Pod 2]
+                                    API3[Backend Pod 3]
+                                    W1[Worker Pod 1]
+                                    W2[Worker Pod 2]
+                                end
+
+                                subgraph "Data Tier"
+                                    PG[PostgreSQL StatefulSet<br/>Persistent Volume]
+                                    RD[Redis Deployment<br/>Master-Replica]
+                                end
+
+                                subgraph "Monitoring"
+                                    PROM[Prometheus]
+                                    GRAF[Grafana]
+                                end
+                            end
+
+                            subgraph "External"
+                                USER[Users]
+                                OME_EXT[OME Instance]
+                            end
+
+                            USER --> ING
+                            ING --> FE1
+                            ING --> FE2
+                            ING --> API1
+                            ING --> API2
+                            ING --> API3
+
+                            API1 --> PG
+                            API2 --> PG
+                            API3 --> PG
+                            API1 --> RD
+                            API2 --> RD
+                            API3 --> RD
+
+                            W1 --> RD
+                            W2 --> RD
+                            W1 --> OME_EXT
+                            W2 --> OME_EXT
+
+                            PROM --> API1
+                            PROM --> API2
+                            PROM --> API3
+                            GRAF --> PROM
+
+                            style FE1 fill:#e3f2fd
+                            style FE2 fill:#e3f2fd
+                            style API1 fill:#e3f2fd
+                            style API2 fill:#e3f2fd
+                            style API3 fill:#e3f2fd
+                            style W1 fill:#fff3e0
+                            style W2 fill:#fff3e0
+                            style PG fill:#c8e6c9
+                            style RD fill:#c8e6c9
+                    </div>
+
+                    <h3>7.6 Security Architecture</h3>
+                    <div class="highlight-box">
+                        <h4>Defense in Depth Strategy</h4>
+                        <ul>
+                            <li><strong>Network Layer:</strong> TLS 1.2+, Kubernetes NetworkPolicies, firewall rules</li>
+                            <li><strong>Application Layer:</strong> JWT authentication, RBAC, input validation, CSRF protection</li>
+                            <li><strong>Data Layer:</strong> Encrypted credentials (AES-256), encrypted database backups, audit logging</li>
+                            <li><strong>Infrastructure Layer:</strong> Container image scanning, secrets management (Kubernetes Secrets), least privilege principles</li>
+                        </ul>
+                    </div>
+
+                    <h3>7.7 Integration Patterns</h3>
+
+                    <h4>OME API Integration Strategy</h4>
+                    <ul>
+                        <li><strong>Connection Pooling:</strong> Reuse HTTP connections to OME for efficiency</li>
+                        <li><strong>Credential Management:</strong> Store encrypted OME credentials, refresh X-Auth tokens automatically</li>
+                        <li><strong>Error Handling:</strong> Retry logic with exponential backoff, circuit breaker pattern</li>
+                        <li><strong>Rate Limiting:</strong> Respect OME API rate limits, queue requests if needed</li>
+                        <li><strong>Caching:</strong> Cache read-only data (device list, groups) with appropriate TTLs</li>
+                        <li><strong>Pagination:</strong> Handle OME pagination automatically, aggregate results</li>
+                        <li><strong>Async Processing:</strong> Long-running OME operations via Celery workers</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="user-experience" class="section">
+                <div class="section-header">
+                    <h2>8. User Experience</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>8.1 Key User Journeys</h3>
+
+                    <h4>Journey 1: Onboard New Devices</h4>
+                    <div class="mermaid">
+                        graph LR
+                            A[Login] --> B[Dashboard]
+                            B --> C[Deploy > Discovery]
+                            C --> D[Discovery Wizard]
+                            D --> E{Discovery<br/>Complete?}
+                            E -->|Success| F[View Devices]
+                            E -->|Partial| G[Review Failures]
+                            F --> H[Create Group]
+                            H --> I[Add Devices to Group]
+                            I --> J[Apply Template<br/>Optional]
+                            J --> K[Monitor Job Status]
+                            K --> L[Devices Ready]
+
+                            style A fill:#e3f2fd
+                            style L fill:#c8e6c9
+                    </div>
+
+                    <h4>Journey 2: Firmware Update Cycle</h4>
+                    <div class="mermaid">
+                        graph LR
+                            A[Dashboard] --> B[Monitor > Firmware Baselines]
+                            B --> C[View Compliance Status]
+                            C --> D{Devices<br/>Non-Compliant?}
+                            D -->|Yes| E[Select Devices/Group]
+                            E --> F[Preview Update Impact]
+                            F --> G{Approve?}
+                            G -->|Yes| H[Schedule Update]
+                            H --> I[Update Executes]
+                            I --> J[Monitor Progress]
+                            J --> K[Verify Compliance]
+                            D -->|No| L[All Compliant]
+
+                            style A fill:#e3f2fd
+                            style K fill:#c8e6c9
+                            style L fill:#c8e6c9
+                    </div>
+
+                    <h4>Journey 3: Monitor & Respond to Alerts</h4>
+                    <div class="mermaid">
+                        graph LR
+                            A[Dashboard Alert Widget] --> B{Critical<br/>Alert?}
+                            B -->|Yes| C[Click Alert]
+                            C --> D[Alert Detail View]
+                            D --> E[View Affected Device]
+                            E --> F[Check Device History]
+                            F --> G{Resolution<br/>Action?}
+                            G -->|Firmware| H[Update Firmware]
+                            G -->|Config| I[Deploy Template]
+                            G -->|Hardware| J[Create Ticket]
+                            H --> K[Acknowledge Alert]
+                            I --> K
+                            J --> K
+                            K --> L[Add Comment]
+
+                            style A fill:#e3f2fd
+                            style K fill:#c8e6c9
+                    </div>
+
+                    <h3>8.2 Wireframe Concepts</h3>
+
+                    <h4>Dashboard Layout</h4>
+                    <div class="card">
+                        <pre>
+┌─────────────────────────────────────────────────────────────┐
+│ OpenManage Console    [Search...]   [Alerts] [User Menu]   │
+├─────────────────────────────────────────────────────────────┤
+│ ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌──────────┐ │
+│ │  Device    │ │   Active   │ │  Firmware  │ │  Power   │ │
+│ │  Health    │ │   Alerts   │ │ Compliance │ │  Usage   │ │
+│ │            │ │            │ │            │ │          │ │
+│ │ ✓ 450      │ │ ⚠ 12       │ │ 85%        │ │ 145 kW   │ │
+│ │ ⚠ 8        │ │ ⚠ 3        │ │ Compliant  │ │ Trending │ │
+│ │ ✗ 2        │ │ ⓘ 45       │ │            │ │ ↓ 5%     │ │
+│ └────────────┘ └────────────┘ └────────────┘ └──────────┘ │
+│                                                             │
+│ ┌─────────────────────────┐ ┌───────────────────────────┐ │
+│ │   Recent Jobs           │ │   Top Device Groups       │ │
+│ │                         │ │                           │ │
+│ │ ● Firmware Update       │ │ • Production Servers (120)│ │
+│ │   ▓▓▓▓▓▓▓░░░ 70%        │ │ • Dev Environment (45)    │ │
+│ │                         │ │ • Storage Cluster (32)    │ │
+│ │ ✓ Discovery Job         │ │ • Database Servers (28)   │ │
+│ │   Completed 5 min ago   │ │                           │ │
+│ │                         │ │ [Manage Groups →]         │ │
+│ └─────────────────────────┘ └───────────────────────────┘ │
+│                                                             │
+│ ┌───────────────────────────────────────────────────────┐ │
+│ │   Quick Actions                                       │ │
+│ │   [+ Discover Devices] [Update Firmware] [New Group] │ │
+│ └───────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                        </pre>
+                    </div>
+
+                    <h4>Device List View</h4>
+                    <div class="card">
+                        <pre>
+┌─────────────────────────────────────────────────────────────┐
+│ Devices                                       [+ Discover]  │
+├─────────────────────────────────────────────────────────────┤
+│ [Search devices...]  [Type ▼] [Status ▼] [Group ▼]  [★]    │
+├─────────────────────────────────────────────────────────────┤
+│ ☐ Name          │ Type   │ Status │ Group      │ Firmware  │
+├─────────────────────────────────────────────────────────────┤
+│ ☐ server-01     │ R650   │ ✓ OK   │ Production │ 6.0.1     │
+│ ☐ server-02     │ R750   │ ⚠ Warn │ Production │ 5.8.2     │
+│ ☐ chassis-01    │ MX7000 │ ✓ OK   │ Blade      │ 2.1.0     │
+│ ☐ storage-01    │ ME4084 │ ✗ Crit │ Storage    │ 4.3.1     │
+│ ...                                                         │
+├─────────────────────────────────────────────────────────────┤
+│ 460 devices | Page 1 of 5  [< 1 2 3 4 5 >]                 │
+│ Selected: 0  [Bulk Actions ▼]  [Export ↓]                  │
+└─────────────────────────────────────────────────────────────┘
+                        </pre>
+                    </div>
+
+                    <h3>8.3 Design Principles</h3>
+                    <ul>
+                        <li><strong>Dashboard-First:</strong> Most important information visible at login</li>
+                        <li><strong>Progressive Disclosure:</strong> Start simple, reveal complexity as needed</li>
+                        <li><strong>Bulk Operations:</strong> Multi-select is default for efficiency</li>
+                        <li><strong>Instant Feedback:</strong> Loading states, progress bars, real-time updates</li>
+                        <li><strong>Safety First:</strong> Destructive actions require confirmation with impact preview</li>
+                        <li><strong>Search-Driven:</strong> Global search accessible from anywhere</li>
+                        <li><strong>Consistent Patterns:</strong> Same interaction patterns across modules</li>
+                        <li><strong>Keyboard Friendly:</strong> All actions accessible via keyboard shortcuts</li>
+                    </ul>
+
+                    <h3>8.4 Responsive Design Strategy</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Breakpoint</th>
+                                <th>Layout</th>
+                                <th>Optimizations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Desktop (1920x1080+)</strong></td>
+                                <td>Full dashboard with 4-column grid</td>
+                                <td>All features available, multi-column layouts</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Laptop (1366x768)</strong></td>
+                                <td>3-column grid, condensed widgets</td>
+                                <td>Slightly reduced widget sizes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tablet (1024x768)</strong></td>
+                                <td>2-column grid, stacked widgets</td>
+                                <td>Simplified tables, touch-friendly controls</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mobile (375x667)</strong></td>
+                                <td>Single column, essential views only</td>
+                                <td>Minimal dashboard, focus on monitoring & alerts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>8.5 Accessibility Features</h3>
+                    <ul>
+                        <li><strong>Keyboard Navigation:</strong> Tab order, focus indicators, keyboard shortcuts</li>
+                        <li><strong>Screen Reader Support:</strong> ARIA labels, semantic HTML, alt text</li>
+                        <li><strong>Color Contrast:</strong> WCAG AA compliant color ratios</li>
+                        <li><strong>Text Sizing:</strong> Support browser zoom up to 200%</li>
+                        <li><strong>Focus Management:</strong> Clear focus indicators, logical focus flow</li>
+                        <li><strong>Error Handling:</strong> Accessible error messages with ARIA live regions</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="success-metrics" class="section">
+                <div class="section-header">
+                    <h2>9. Success Metrics</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>9.1 Key Performance Indicators (KPIs)</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Metric</th>
+                                <th>Target</th>
+                                <th>Measurement Method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3"><strong>User Adoption</strong></td>
+                                <td>Active Users</td>
+                                <td>80% of pilot users active weekly</td>
+                                <td>Weekly login analytics</td>
+                            </tr>
+                            <tr>
+                                <td>Feature Usage</td>
+                                <td>All 6 categories used monthly</td>
+                                <td>Feature usage telemetry</td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard Customization</td>
+                                <td>70% of users create custom dashboard</td>
+                                <td>Database analytics</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3"><strong>Performance</strong></td>
+                                <td>Dashboard Load Time</td>
+                                <td>&lt; 1 second (p95)</td>
+                                <td>Browser Performance API</td>
+                            </tr>
+                            <tr>
+                                <td>API Response Time</td>
+                                <td>&lt; 200ms (p95)</td>
+                                <td>Prometheus metrics</td>
+                            </tr>
+                            <tr>
+                                <td>Uptime</td>
+                                <td>99.9%</td>
+                                <td>Health check monitoring</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3"><strong>Efficiency</strong></td>
+                                <td>Time to Complete Tasks</td>
+                                <td>30% faster vs. native OME console</td>
+                                <td>User studies, task timing</td>
+                            </tr>
+                            <tr>
+                                <td>Bulk Operations</td>
+                                <td>Average 50+ devices per operation</td>
+                                <td>Operation analytics</td>
+                            </tr>
+                            <tr>
+                                <td>Scheduled Operations</td>
+                                <td>40% of updates scheduled vs. manual</td>
+                                <td>Job type analytics</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="2"><strong>Quality</strong></td>
+                                <td>Error Rate</td>
+                                <td>&lt; 1% failed operations</td>
+                                <td>Error logging and analytics</td>
+                            </tr>
+                            <tr>
+                                <td>User Satisfaction</td>
+                                <td>4.5/5 average rating</td>
+                                <td>In-app feedback surveys</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="2"><strong>Security</strong></td>
+                                <td>Security Incidents</td>
+                                <td>0 breaches</td>
+                                <td>Security audit log</td>
+                            </tr>
+                            <tr>
+                                <td>Audit Coverage</td>
+                                <td>100% operations logged</td>
+                                <td>Audit log completeness check</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>9.2 Pilot Success Criteria</h3>
+                    <div class="success-box">
+                        <h4>Go/No-Go Decision Factors</h4>
+                        <ul>
+                            <li>✅ All 47 operations functional and tested</li>
+                            <li>✅ 80%+ pilot users prefer this console over alternatives</li>
+                            <li>✅ Performance targets met (dashboard &lt;1s, API &lt;200ms)</li>
+                            <li>✅ Zero critical security vulnerabilities</li>
+                            <li>✅ 99.9% uptime achieved during pilot</li>
+                            <li>✅ Positive ROI projected based on efficiency gains</li>
+                            <li>✅ Scalability validated (100+ concurrent users)</li>
+                        </ul>
+                    </div>
+
+                    <h3>9.3 Analytics & Telemetry</h3>
+                    <h4>Data Collection</h4>
+                    <ul>
+                        <li><strong>Usage Analytics:</strong> Page views, feature usage, user flows (privacy-respecting)</li>
+                        <li><strong>Performance Metrics:</strong> Load times, API latency, error rates</li>
+                        <li><strong>User Behavior:</strong> Dashboard configurations, search patterns, bulk operation sizes</li>
+                        <li><strong>Business Metrics:</strong> Devices managed, operations performed, time saved</li>
+                    </ul>
+
+                    <h4>Privacy & Compliance</h4>
+                    <ul>
+                        <li>No PII collected without consent</li>
+                        <li>Anonymized aggregate analytics only</li>
+                        <li>Opt-out mechanism for telemetry</li>
+                        <li>Data retention policies clearly communicated</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="timeline" class="section">
+                <div class="section-header">
+                    <h2>10. Timeline & Milestones</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>3-Month Pilot Project Timeline</h3>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <h4>Month 1: Foundation (Weeks 1-4)</h4>
+                                <span class="badge badge-phase">Phase 1</span>
+                                <h5>Week 1-2: Project Setup & Core Infrastructure</h5>
+                                <ul>
+                                    <li>Development environment setup</li>
+                                    <li>CI/CD pipeline configuration</li>
+                                    <li>Docker & Kubernetes manifests</li>
+                                    <li>Database schema design & migrations</li>
+                                    <li>Authentication system (login, JWT, RBAC)</li>
+                                    <li>FastAPI boilerplate with OME client wrapper</li>
+                                    <li>React app scaffolding with routing</li>
+                                </ul>
+
+                                <h5>Week 3-4: Dashboard & Monitor Operations</h5>
+                                <ul>
+                                    <li>Dashboard framework (React Grid Layout integration)</li>
+                                    <li>Widget library (8 core widgets)</li>
+                                    <li>Device list view with filtering/pagination</li>
+                                    <li>Alert management interface</li>
+                                    <li>Device inventory & chassis views</li>
+                                    <li>Report list & execution</li>
+                                    <li>Audit log viewer</li>
+                                </ul>
+
+                                <div class="highlight-box">
+                                    <strong>Milestone 1:</strong> Demo-able dashboard with device list, alerts, and real-time monitoring
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <h4>Month 2: Core Operations (Weeks 5-8)</h4>
+                                <span class="badge badge-phase">Phase 2</span>
+
+                                <h5>Week 5-6: Deploy Operations</h5>
+                                <ul>
+                                    <li>Device discovery wizard (multi-step form)</li>
+                                    <li>Group management (static, MCM, query groups)</li>
+                                    <li>Template creation & management</li>
+                                    <li>Template deployment with identity pools</li>
+                                    <li>Network & VLAN management</li>
+                                    <li>User management interface</li>
+                                    <li>Power state control</li>
+                                </ul>
+
+                                <h5>Week 7-8: Update Operations & Job Tracking</h5>
+                                <ul>
+                                    <li>Firmware baseline dashboard</li>
+                                    <li>Firmware update (catalog-based)</li>
+                                    <li>Direct DUP upload & update</li>
+                                    <li>Inventory refresh operations</li>
+                                    <li>Job tracking system (real-time status)</li>
+                                    <li>Job queue visualization</li>
+                                    <li>Celery worker implementation for async ops</li>
+                                    <li>Bulk operation framework</li>
+                                </ul>
+
+                                <div class="highlight-box">
+                                    <strong>Milestone 2:</strong> Complete Deploy & Update modules with working job tracking
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <h4>Month 3: Advanced Features & Launch Prep (Weeks 9-12)</h4>
+                                <span class="badge badge-phase">Phase 3</span>
+
+                                <h5>Week 9-10: Power Manager & Enhancements</h5>
+                                <ul>
+                                    <li>Power Manager dashboard & widgets</li>
+                                    <li>Power monitoring (device & group metrics)</li>
+                                    <li>Power policy management</li>
+                                    <li>Power alerts & reports</li>
+                                    <li>EPR configuration</li>
+                                    <li>Maintenance operations (retire lead, VLAN profiles)</li>
+                                    <li>Comparison view engine</li>
+                                    <li>Scheduled operations</li>
+                                    <li>Custom report builder (basic)</li>
+                                </ul>
+
+                                <h5>Week 11: Integration & Polish</h5>
+                                <ul>
+                                    <li>Webhook framework & integrations (Slack, email)</li>
+                                    <li>API documentation (OpenAPI/Swagger)</li>
+                                    <li>Dashboard export/import</li>
+                                    <li>Advanced search & filtering</li>
+                                    <li>Accessibility improvements (WCAG AA)</li>
+                                    <li>Dark mode theme</li>
+                                    <li>Performance optimization</li>
+                                    <li>Error handling & user feedback improvements</li>
+                                </ul>
+
+                                <h5>Week 12: Testing, Documentation & Deployment</h5>
+                                <ul>
+                                    <li>Comprehensive testing (unit, integration, e2e)</li>
+                                    <li>Security audit & penetration testing</li>
+                                    <li>User documentation & help system</li>
+                                    <li>Deployment automation (Helm charts)</li>
+                                    <li>Monitoring setup (Prometheus/Grafana dashboards)</li>
+                                    <li>Pilot environment deployment</li>
+                                    <li>User training materials</li>
+                                    <li>Pilot launch & onboarding</li>
+                                </ul>
+
+                                <div class="highlight-box">
+                                    <strong>Milestone 3:</strong> Production-ready pilot release with all features, documentation, and monitoring
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Resource Allocation</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Allocation</th>
+                                <th>Key Responsibilities</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Frontend Developer</strong></td>
+                                <td>2 FTE</td>
+                                <td>React components, UI/UX implementation, dashboard framework</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Backend Developer</strong></td>
+                                <td>2 FTE</td>
+                                <td>FastAPI development, OME integration, Celery workers, database</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DevOps Engineer</strong></td>
+                                <td>1 FTE</td>
+                                <td>Kubernetes setup, CI/CD, monitoring, deployment automation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product Manager</strong></td>
+                                <td>0.5 FTE</td>
+                                <td>Requirements, prioritization, pilot coordination, user feedback</td>
+                            </tr>
+                            <tr>
+                                <td><strong>QA Engineer</strong></td>
+                                <td>1 FTE</td>
+                                <td>Test planning, automation, security testing, regression</td>
+                            </tr>
+                            <tr>
+                                <td><strong>UX Designer</strong></td>
+                                <td>0.5 FTE</td>
+                                <td>Wireframes, visual design, user flows, accessibility</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="warning-box">
+                        <strong>Critical Path Items:</strong>
+                        <ul>
+                            <li>Authentication system (blocks all other work)</li>
+                            <li>OME API client wrapper (needed for all operations)</li>
+                            <li>Job tracking framework (required for async operations)</li>
+                            <li>Dashboard framework (foundation for customization)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="risks" class="section">
+                <div class="section-header">
+                    <h2>11. Risks & Mitigations</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Risk Assessment Matrix</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk</th>
+                                <th>Probability</th>
+                                <th>Impact</th>
+                                <th>Mitigation Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>OME API Changes</strong><br/>OME API updates break compatibility</td>
+                                <td>Medium</td>
+                                <td>High</td>
+                                <td>
+                                    • Version OME API client library<br/>
+                                    • Implement adapter pattern for API calls<br/>
+                                    • Automated integration tests against OME<br/>
+                                    • Monitor Dell OME release notes
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scope Creep</strong><br/>Feature requests exceed 3-month timeline</td>
+                                <td>High</td>
+                                <td>High</td>
+                                <td>
+                                    • Strict MVP scope definition<br/>
+                                    • Feature freeze 2 weeks before pilot<br/>
+                                    • Post-pilot roadmap for additional features<br/>
+                                    • Weekly scope review meetings
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Performance Issues at Scale</strong><br/>System slow with 10k+ devices</td>
+                                <td>Medium</td>
+                                <td>High</td>
+                                <td>
+                                    • Early performance testing with large datasets<br/>
+                                    • Redis caching strategy<br/>
+                                    • Database query optimization & indexing<br/>
+                                    • Pagination for all large result sets
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Security Vulnerability</strong><br/>Critical security flaw discovered</td>
+                                <td>Low</td>
+                                <td>Critical</td>
+                                <td>
+                                    • Security-first development practices<br/>
+                                    • Regular security scans (SAST/DAST)<br/>
+                                    • Penetration testing before pilot<br/>
+                                    • Rapid patch deployment capability
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>User Adoption Resistance</strong><br/>Users prefer existing tools</td>
+                                <td>Medium</td>
+                                <td>Medium</td>
+                                <td>
+                                    • Early user involvement in design<br/>
+                                    • Comprehensive training & documentation<br/>
+                                    • Highlight unique value propositions<br/>
+                                    • Gradual migration path (not forced switch)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>OME Connectivity Issues</strong><br/>Network problems to OME instance</td>
+                                <td>Medium</td>
+                                <td>Medium</td>
+                                <td>
+                                    • Retry logic with exponential backoff<br/>
+                                    • Circuit breaker pattern<br/>
+                                    • Graceful degradation (show cached data)<br/>
+                                    • Clear error messages with troubleshooting
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Database Failure</strong><br/>PostgreSQL downtime or data loss</td>
+                                <td>Low</td>
+                                <td>High</td>
+                                <td>
+                                    • PostgreSQL high availability setup<br/>
+                                    • Daily automated backups<br/>
+                                    • Backup restoration testing<br/>
+                                    • Database replication
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resource Constraints</strong><br/>Team member unavailability</td>
+                                <td>Medium</td>
+                                <td>Medium</td>
+                                <td>
+                                    • Cross-training team members<br/>
+                                    • Documentation of architecture & decisions<br/>
+                                    • Code review process<br/>
+                                    • 20% time buffer in schedule
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Deployment Complexity</strong><br/>Kubernetes deployment issues</td>
+                                <td>Medium</td>
+                                <td>Medium</td>
+                                <td>
+                                    • Docker Compose for development<br/>
+                                    • Automated deployment scripts (Helm)<br/>
+                                    • Staging environment testing<br/>
+                                    • Rollback procedures documented
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dashboard Customization Complexity</strong><br/>Users struggle with customization</td>
+                                <td>Low</td>
+                                <td>Low</td>
+                                <td>
+                                    • Intuitive drag-and-drop interface<br/>
+                                    • Pre-built dashboard templates<br/>
+                                    • Interactive tutorial/onboarding<br/>
+                                    • Video tutorials & documentation
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Assumptions & Dependencies</h3>
+
+                    <h4>Key Assumptions</h4>
+                    <ul>
+                        <li>Dell OME API remains stable during pilot (no breaking changes)</li>
+                        <li>Users have OME v3.4+ with appropriate plugins installed</li>
+                        <li>Kubernetes cluster available for deployment (or Docker Compose acceptable)</li>
+                        <li>Network connectivity between console and OME instance is reliable</li>
+                        <li>Pilot users willing to provide regular feedback</li>
+                        <li>Single OME instance sufficient for MVP (no multi-instance requirement)</li>
+                    </ul>
+
+                    <h4>External Dependencies</h4>
+                    <ul>
+                        <li><strong>Dell OME API:</strong> All functionality depends on OME REST API availability</li>
+                        <li><strong>Infrastructure:</strong> Kubernetes cluster or Docker environment</li>
+                        <li><strong>Network:</strong> Reliable network connectivity to OME</li>
+                        <li><strong>User Access:</strong> Pilot users need OME credentials with appropriate privileges</li>
+                        <li><strong>Third-party Services:</strong> Optional integrations (Slack, email) require configuration</li>
+                    </ul>
+
+                    <h3>Contingency Plans</h3>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Timeline Slip Scenarios</h4>
+                            <ul>
+                                <li><strong>1 week delay:</strong> Reduce polish, launch with basic features</li>
+                                <li><strong>2 week delay:</strong> Defer Power Manager module to post-pilot</li>
+                                <li><strong>4+ week delay:</strong> Re-scope to read-only MVP, defer write operations</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>Technical Failure Scenarios</h4>
+                            <ul>
+                                <li><strong>Performance issues:</strong> Scale down pilot device count, optimize critical paths</li>
+                                <li><strong>Security breach:</strong> Immediate patch, audit log review, user notification</li>
+                                <li><strong>OME API issues:</strong> Implement workarounds, fallback to manual operations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="scroll-top" id="scrollTop">↑</div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#e3f2fd',
+                primaryTextColor: '#333',
+                primaryBorderColor: '#0076ce',
+                lineColor: '#0076ce',
+                secondaryColor: '#fff3e0',
+                tertiaryColor: '#c8e6c9'
+            }
+        });
+
+        // Collapsible sections
+        document.querySelectorAll('.section-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('collapsed');
+            });
+        });
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Update active link
+                    document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Scroll-to-top button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Highlight active section in TOC based on scroll position
+        const sections = document.querySelectorAll('.section');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
